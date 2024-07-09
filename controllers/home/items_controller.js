@@ -250,6 +250,17 @@ const deleteItemVendor = async(req,res)=>{
     res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
    }
 }
+const verifyAddP=async (req, res, next)=> {
+    var token = req.headers.token;
+    const vendor = await Vendor.findOne({token:token});
+    const items = await Item.find({vendorId:vendor.id});
+    if (items.length <= 100) {
+      res.status(200).send({ "success": false, "data": true});
+    } else {
+      res.status(400).send({ "success": false, "message": "max 100" });
+    }
+  }
+  module.exports = {verifyAdd};
  module.exports = {
-    getAllItems,getSearchItems,getLikesItems,getCartItems,getLatestItems,deleteItemAdmin,changeItemStatusAdmin,getLatestItemsNotVerifyAdmin,getLatestItemsVerifyAdmin,addProduct,iUpload,addImage,getLatestItemsVerifyVendor,getLatestItemsNotVerifyVendor,deleteItemVendor
+    getAllItems,getSearchItems,getLikesItems,getCartItems,getLatestItems,deleteItemAdmin,changeItemStatusAdmin,getLatestItemsNotVerifyAdmin,getLatestItemsVerifyAdmin,addProduct,iUpload,addImage,getLatestItemsVerifyVendor,getLatestItemsNotVerifyVendor,deleteItemVendor,verifyAddP
    }
