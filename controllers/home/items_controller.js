@@ -260,7 +260,6 @@ const verifyAddP=async (req, res, next)=> {
       res.status(400).send({ "success": false, "message": "max 100" });
     }
   }
-  module.exports = {verifyAdd};
  module.exports = {
     getAllItems,getSearchItems,getLikesItems,getCartItems,getLatestItems,deleteItemAdmin,changeItemStatusAdmin,getLatestItemsNotVerifyAdmin,getLatestItemsVerifyAdmin,addProduct,iUpload,addImage,getLatestItemsVerifyVendor,getLatestItemsNotVerifyVendor,deleteItemVendor,verifyAddP
    }
