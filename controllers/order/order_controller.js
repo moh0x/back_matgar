@@ -406,7 +406,7 @@ const deleteOrderVendor = async(req,res)=>{
   if (order   ) {
     
  if (order.orderVendorId == vendor.id) {
-  if (order.orderStatusId == "first" || order.orderStatusId == "not agree") {
+  if (order.orderStatusId == "order by user" || order.orderStatusId == "not agree") {
     const newOrder =   await Order.findByIdAndUpdate(req.body.orderId,{
       $set:{
         orderStatusId:"agree",
@@ -434,7 +434,7 @@ const notAgreeOrderVendor = async(req,res)=>{
     const vendor = await Vendor.findOne({token:token});
   const order = await Order.findById(req.body.orderId);
   if (order) {
- if (order.orderStatusId == "first" && order.orderVendorId == vendor.id) {
+ if (order.orderStatusId == "order by user" && order.orderVendorId == vendor.id) {
   const newOrder =   await Order.findByIdAndUpdate(req.body.orderId,{
     $set:{
       orderStatusId:"not agree",
@@ -459,7 +459,7 @@ const agreeOrderVendor = async(req,res)=>{
     const vendor = await Vendor.findOne({token:token});
   const order = await Order.findById(req.body.orderId);
   if (order) {
- if (order.orderStatusId == "first" && order.orderVendorId == vendor.id) {
+ if (order.orderStatusId == "order by user" && order.orderVendorId == vendor.id) {
   const newOrder =   await Order.findByIdAndUpdate(req.body.orderId,{
     $set:{
       orderStatusId:"agree",
