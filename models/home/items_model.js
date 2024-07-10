@@ -45,13 +45,11 @@ const itemsSchema = new mongoose.Schema({
        itemPrice:{
         type:Number,
         required:true,
-        minLength:6,
-        maxLength:200
+       
        },
        itemDisCount:{
         type:Number,
-        minLength:6,
-        maxLength:100
+       
        },
        itemCatId:{
         type:String,
