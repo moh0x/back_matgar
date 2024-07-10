@@ -398,6 +398,101 @@ const getOrderAgreeDeliviry = async(req,res)=>{
     res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
    }
 }
+const deleteOrderVendor = async(req,res)=>{
+  try {
+    const token = req.body.token;
+    const vendor = await Vendor.findOne({token:token});
+  const order = await Order.findById(req.body.orderId);
+  if (order   ) {
+    
+ if (order.orderVendorId == vendor.id) {
+  if (order.orderStatusId == "first" || order.orderStatusId == "not agree") {
+    const newOrder =   await Order.findByIdAndUpdate(req.body.orderId,{
+      $set:{
+        orderStatusId:"agree",
+      }
+    });
+    await newOrder.save();
+    res.status(200).json({"status":httpsStatus.SUCCESS,"data":newOrder}); 
+   } else {
+    res.status(400).json({"status":httpsStatus.FAIL,"data":null,"message":"status fail"});
+   }
+ } else {
+  res.status(400).json({"status":httpsStatus.FAIL,"data":null,"message":"status fail"});
+ }
+  } else {
+   res.status(400).json({"status":httpsStatus.FAIL,"data":null,"message":"no order"}); 
+  }
+  } catch (error){
+    console.log(error);
+   res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
+  }
+}
+const notAgreeOrderVendor = async(req,res)=>{
+  try {
+    const token = req.body.token;
+    const vendor = await Vendor.findOne({token:token});
+  const order = await Order.findById(req.body.orderId);
+  if (order) {
+ if (order.orderStatusId == "first" && order.orderVendorId == vendor.id) {
+  const newOrder =   await Order.findByIdAndUpdate(req.body.orderId,{
+    $set:{
+      orderStatusId:"not agree",
+    }
+  });
+  await newOrder.save();
+  res.status(200).json({"status":httpsStatus.SUCCESS,"data":newOrder}); 
+ } else {
+  res.status(400).json({"status":httpsStatus.FAIL,"data":null,"message":"status fail"});
+ }
+  } else {
+   res.status(400).json({"status":httpsStatus.FAIL,"data":null,"message":"no order"}); 
+  }
+  } catch (error){
+    console.log(error);
+   res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
+  }
+}
+const agreeOrderVendor = async(req,res)=>{
+  try {
+    const token = req.body.token;
+    const vendor = await Vendor.findOne({token:token});
+  const order = await Order.findById(req.body.orderId);
+  if (order) {
+ if (order.orderStatusId == "first" && order.orderVendorId == vendor.id) {
+  const newOrder =   await Order.findByIdAndUpdate(req.body.orderId,{
+    $set:{
+      orderStatusId:"agree",
+    }
+  });
+  await newOrder.save();
+  res.status(200).json({"status":httpsStatus.SUCCESS,"data":newOrder}); 
+ } else {
+  res.status(400).json({"status":httpsStatus.FAIL,"data":null,"message":"status fail"});
+ }
+  } else {
+   res.status(400).json({"status":httpsStatus.FAIL,"data":null,"message":"no order"}); 
+  }
+  } catch (error){
+    console.log(error);
+   res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
+  }
+}
+const getOrdersVendor = async(req,res)=>{
+  const limit = 15;
+  const page = req.body.page || 1;
+  const skip = (page - 1) * limit;
+  const token = req.body.token;
+   try {
+    const vendor = await Vendor.findOne({token:token});
+    const orders = await Order.find({orderVendorId:vendor.id}).sort({orderFirstDate:-1}).limit(limit).skip(skip); 
+   
+       res.status(200).json({"status":httpsStatus.SUCCESS,"data":orders}); 
+   } catch (error){
+     console.log(error);
+    res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
+   }
+}
  module.exports = {
-    getMyOrders,addOrder,deleteOrder,getDelivirySummary,getMySummary,getOrderFirstAdmin,getOrderAgreeAdmin,getOrderNotAgreeAdmin,getOrderDeliviryAdmin,getOrderDeliviriedAdmin,getOrderFinishAdmin,getOrderArchiveAdmin,finshOrderAdmin,archiveOrderAdmin,deleteOrderAdmin,getOrderAgreeDeliviry,deliviryOrderDeliviry,deliviriedOrderDeliviry
+    getMyOrders,addOrder,deleteOrder,getDelivirySummary,getMySummary,getOrderFirstAdmin,getOrderAgreeAdmin,getOrderNotAgreeAdmin,getOrderDeliviryAdmin,getOrderDeliviriedAdmin,getOrderFinishAdmin,getOrderArchiveAdmin,finshOrderAdmin,archiveOrderAdmin,deleteOrderAdmin,getOrderAgreeDeliviry,deliviryOrderDeliviry,deliviriedOrderDeliviry,getOrdersVendor,agreeOrderVendor,deleteOrderVendor,notAgreeOrderVendor
    }
