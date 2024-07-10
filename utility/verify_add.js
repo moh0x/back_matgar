@@ -8,6 +8,7 @@ const verifyAdd=async (req, res, next)=> {
     if (items.length <= 100) {
       next();
     } else {
+        console.log("aaaaaaa");
       res.status(400).send({ "success": false, "message": "max 100" })
     }
   }
