@@ -4,6 +4,7 @@ const orderController = require('../../controllers/order/order_controller');
 const { verifyToken } = require("../../utility/verify_token");
 const { verifyAdmin } = require('../../utility/verify_role_admin');
 const { verifyDeliviry } = require('../../utility/verify_role_deliviry');
+const { verifyVendor } = require('../../utility/verify_role_vendor');
 router.get('/myOrders',verifyToken,orderController.getMyOrders);
 router.get('/mySummary',verifyToken,verifyAdmin,orderController.getMySummary);
 router.get('/delivirySummary',orderController.getDelivirySummary);
@@ -22,5 +23,9 @@ router.patch('/admin/archiveOrder',verifyToken,verifyAdmin,orderController.archi
 router.patch('/deliviry/deliviryOrder',verifyToken,verifyDeliviry,orderController.deliviryOrderDeliviry);
 router.patch('/deliviry/deliviriedOrder',verifyToken,verifyDeliviry,orderController.deliviriedOrderDeliviry);
 router.get('/deliviry/agree',verifyToken,verifyDeliviry,orderController.getOrderAgreeDeliviry);
+router.get('/vendor/orders',verifyToken,verifyVendor,orderController.getOrdersVendor);
+router.patch('/vendor/agreeOrder',verifyToken,verifyVendor,orderController.agreeOrderVendor);
+router.patch('/vendor/notAgreeOrder',verifyToken,verifyVendor,orderController.notAgreeOrderVendor);
+router.delete('/vendor/deleteOrder',verifyToken,verifyVendor,orderController.deleteOrderVendor);
   module.exports = 
     router
