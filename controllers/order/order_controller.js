@@ -482,7 +482,7 @@ const getOrdersVendor = async(req,res)=>{
   const limit = 15;
   const page = req.body.page || 1;
   const skip = (page - 1) * limit;
-  const token = req.body.token;
+  const token = req.headers.token;
    try {
     const vendor = await Vendor.findOne({token:token});
     const orders = await Order.find({orderVendorId:vendor.id}).sort({orderFirstDate:-1}).limit(limit).skip(skip); 
