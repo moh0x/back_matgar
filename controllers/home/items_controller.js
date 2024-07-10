@@ -176,7 +176,7 @@ const addImage = async(req,res)=>{
       itemNameEnglish:req.body.itemNameEnglish,
       itemDescArabic:req.body.itemDescArabic,
       itemDescEnglish:req.body.itemDescEnglish,
-      itemImage:itemLink,
+      itemImage:req.body.itemLink,
       itemCount:0,
       itemActive:false,
       itemPrice:req.body.itemPrice,
@@ -198,6 +198,7 @@ const addImage = async(req,res)=>{
    await item.save();
    res.status(200).json({"status":httpsStatus.SUCCESS,"data":item});
  } catch (error) {
+     console.log(error);
    res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
  }
     
