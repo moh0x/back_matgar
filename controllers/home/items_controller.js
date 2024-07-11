@@ -234,7 +234,7 @@ const deleteItemVendor = async(req,res)=>{
    try {
       const itemId = req.body.itemId;
       const itemSer = await Item.findById(itemId);
-      const token = req.body.token;
+      const token = req.headers.token;
       const vendor = await Vendor.findOne({token:token});
     if (itemSer) {
     if (itemSer.vendorId == vendor.id) {
