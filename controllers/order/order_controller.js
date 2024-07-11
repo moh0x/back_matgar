@@ -455,7 +455,7 @@ const notAgreeOrderVendor = async(req,res)=>{
 }
 const agreeOrderVendor = async(req,res)=>{
   try {
-    const token = req.body.token;
+    const token = req.headers.token;
     const vendor = await Vendor.findOne({token:token});
   const order = await Order.findById(req.body.orderId);
   if (order) {
