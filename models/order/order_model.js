@@ -11,7 +11,7 @@ const orderSchema = new mongoose.Schema({
     orderCount:{
         type:Number,
         required:true,
-        minLength:1,
+      
         maxLength:10
     },
     orderNotAgree:{
@@ -21,7 +21,7 @@ const orderSchema = new mongoose.Schema({
     orderDetails:{
         type:String,
         required:true,
-        minLength:3,
+     
         maxLength:100
     },
     orderUserId:{
@@ -56,19 +56,19 @@ const orderSchema = new mongoose.Schema({
     orderUserAdressCity:{
         type:String,
         required:true,
-        minLength:3,
+       
         maxLength:30
     },
     orderUserAdressMiniCipality:{
         type:String,
         required:true,
-        minLength:3,
+        
         maxLength:30
     },
     orderUserAdressDistrict:{
         type:String,
         required:true,
-        minLength:3,
+        
         maxLength:50
     },
     orderVendorId:{
