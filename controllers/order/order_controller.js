@@ -356,7 +356,34 @@ const deliviryOrderDeliviry = async(req,res)=>{
    res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
   }
 }
-
+const unDeliviryOrderDeliviry = async(req,res)=>{
+  try {
+  const order = await Order.findById(req.body.orderId);
+  const deliviry = await Deliviry.findOne({token:req.headers.token});
+  if (order) {
+ if (order.orderStatusId == "deliviry" && order.orderDeliviryId == deliviry.id) {
+  const newOrder =   await Order.findByIdAndUpdate(req.body.orderId,{
+    $set:{
+      orderStatusId:"agree",
+      orderDeliviryEmail:" ",
+      orderDeliviryId:" ",
+      orderDeliviryName:" ",
+      orderDeliviryPhone:" "
+    }
+  });
+  await newOrder.save();
+  res.status(200).json({"status":httpsStatus.SUCCESS,"data":newOrder}); 
+ } else {
+  res.status(400).json({"status":httpsStatus.FAIL,"data":null,"message":"status fail"});
+ }
+  } else {
+   res.status(400).json({"status":httpsStatus.FAIL,"data":null,"message":"no order"}); 
+  }
+  } catch (error){
+    console.log(error);
+   res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
+  }
+}
 const deliviriedOrderDeliviry = async(req,res)=>{
   try {
   const order = await Order.findById(req.body.orderId);
@@ -385,6 +412,21 @@ const deliviriedOrderDeliviry = async(req,res)=>{
    res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
   }
 }
+const getOrderDeliviry = async(req,res)=>{
+  const limit = 15;
+  const page = req.body.page || 1;
+  const skip = (page - 1) * limit;
+  const token = req.headers.token;
+  const deliviry = await Deliviry.findOne({token:token});
+   try {
+    const orders = await Order.find({orderStatusId:"deliviry",orderDeliviryId:deliviry.id}).sort({orderFirstDate:-1}).limit(limit).skip(skip); 
+   
+       res.status(200).json({"status":httpsStatus.SUCCESS,"data":orders}); 
+   } catch (error){
+     console.log(error);
+    res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
+   }
+}
 const getOrderAgreeDeliviry = async(req,res)=>{
   const limit = 15;
   const page = req.body.page || 1;
@@ -406,7 +448,7 @@ const deleteOrderVendor = async(req,res)=>{
   if (order   ) {
     
  if (order.orderVendorId == vendor.id) {
-  if (order.orderStatusId == "order by user" || order.orderStatusId == "not agree") {
+  if (order.orderStatusId == "first" || order.orderStatusId == "not agree") {
     const newOrder =   await Order.findByIdAndUpdate(req.body.orderId,{
       $set:{
         orderStatusId:"agree",
@@ -434,7 +476,7 @@ const notAgreeOrderVendor = async(req,res)=>{
     const vendor = await Vendor.findOne({token:token});
   const order = await Order.findById(req.body.orderId);
   if (order) {
- if (order.orderStatusId == "order by user" && order.orderVendorId == vendor.id) {
+ if (order.orderStatusId == "first" && order.orderVendorId == vendor.id) {
   const newOrder =   await Order.findByIdAndUpdate(req.body.orderId,{
     $set:{
       orderStatusId:"not agree",
@@ -455,11 +497,11 @@ const notAgreeOrderVendor = async(req,res)=>{
 }
 const agreeOrderVendor = async(req,res)=>{
   try {
-    const token = req.headers.token;
+    const token = req.body.token;
     const vendor = await Vendor.findOne({token:token});
   const order = await Order.findById(req.body.orderId);
   if (order) {
- if (order.orderStatusId == "order by user" && order.orderVendorId == vendor.id) {
+ if (order.orderStatusId == "first" && order.orderVendorId == vendor.id) {
   const newOrder =   await Order.findByIdAndUpdate(req.body.orderId,{
     $set:{
       orderStatusId:"agree",
@@ -482,7 +524,7 @@ const getOrdersVendor = async(req,res)=>{
   const limit = 15;
   const page = req.body.page || 1;
   const skip = (page - 1) * limit;
-  const token = req.headers.token;
+  const token = req.body.token;
    try {
     const vendor = await Vendor.findOne({token:token});
     const orders = await Order.find({orderVendorId:vendor.id}).sort({orderFirstDate:-1}).limit(limit).skip(skip); 
@@ -494,5 +536,5 @@ const getOrdersVendor = async(req,res)=>{
    }
 }
  module.exports = {
-    getMyOrders,addOrder,deleteOrder,getDelivirySummary,getMySummary,getOrderFirstAdmin,getOrderAgreeAdmin,getOrderNotAgreeAdmin,getOrderDeliviryAdmin,getOrderDeliviriedAdmin,getOrderFinishAdmin,getOrderArchiveAdmin,finshOrderAdmin,archiveOrderAdmin,deleteOrderAdmin,getOrderAgreeDeliviry,deliviryOrderDeliviry,deliviriedOrderDeliviry,getOrdersVendor,agreeOrderVendor,deleteOrderVendor,notAgreeOrderVendor
+    getMyOrders,addOrder,deleteOrder,getDelivirySummary,getMySummary,getOrderFirstAdmin,getOrderAgreeAdmin,getOrderNotAgreeAdmin,getOrderDeliviryAdmin,getOrderDeliviriedAdmin,getOrderFinishAdmin,getOrderArchiveAdmin,finshOrderAdmin,archiveOrderAdmin,deleteOrderAdmin,getOrderAgreeDeliviry,deliviryOrderDeliviry,deliviriedOrderDeliviry,getOrdersVendor,agreeOrderVendor,deleteOrderVendor,notAgreeOrderVendor,getOrderDeliviry,unDeliviryOrderDeliviry
    }
