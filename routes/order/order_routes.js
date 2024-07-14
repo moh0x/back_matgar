@@ -23,6 +23,8 @@ router.patch('/admin/archiveOrder',verifyToken,verifyAdmin,orderController.archi
 router.patch('/deliviry/deliviryOrder',verifyToken,verifyDeliviry,orderController.deliviryOrderDeliviry);
 router.patch('/deliviry/deliviriedOrder',verifyToken,verifyDeliviry,orderController.deliviriedOrderDeliviry);
 router.get('/deliviry/agree',verifyToken,verifyDeliviry,orderController.getOrderAgreeDeliviry);
+router.get('/deliviry/myOrders',verifyToken,verifyDeliviry,orderController.getOrderDeliviry);
+router.patch('/deliviry/unDeliviryOrder',verifyToken,verifyDeliviry,orderController.unDeliviryOrderDeliviry);
 router.get('/vendor/orders',verifyToken,verifyVendor,orderController.getOrdersVendor);
 router.patch('/vendor/agreeOrder',verifyToken,verifyVendor,orderController.agreeOrderVendor);
 router.patch('/vendor/notAgreeOrder',verifyToken,verifyVendor,orderController.notAgreeOrderVendor);
