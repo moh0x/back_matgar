@@ -16,7 +16,8 @@ router.post('/login',body("email").isEmail().isLength({min:6,max:50}).withMessag
 router.post('/sendResetCode',userControoler.sendResetCodeFunc);
 router.get('/admin/getAllUsersVerify',verifyToken,verifyAdmin,userControoler.getAllUsersVerifyAdmin)
 router.get('/admin/getAllUsersNotVerify',verifyToken,verifyAdmin,userControoler.getAllUsersNotVerifyAdmin)
-router.delete('/admin/deleteUser',verifyToken,verifyAdmin,userControoler.deleteUserAdmin)
+router.delete('/admin/deleteUser',verifyToken,verifyAdmin,userControoler.deleteUserAdmin);
+router.get('/privacy',userControoler.privacy)
   module.exports = 
     router
   
