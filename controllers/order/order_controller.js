@@ -43,7 +43,7 @@ const addOrder = async(req,res)=>{
             orderCount:user.cart[index]['count'],
             orderDetails:user.cart[index]['details'],
             orderFirstDate:Date.now(),
-            orderlastDate:Date('0000000000'),
+            orderlastDate:Date.now(),
             orderPrice:product.itemDisCount == 0 ? product.itemPrice * user.cart[index]['count'] : product.itemNewPrice * user.cart[index]['count'],
             orderStatusId:"order by user",
             orderUserId:user._id,
