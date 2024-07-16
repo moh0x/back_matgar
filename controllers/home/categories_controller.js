@@ -39,35 +39,59 @@ const deleteCategoryAdmin = async(req,res)=>{
    res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
   }
 }
+var categoryLink ;
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname);
-  },
-});
-const upload = multer({
-  storage: storage,
-  limits: { fileSize: 3000000 }, 
-  fileFilter: (req, file, cb) => {
-    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-      cb(null, true);
-    } else {
-      cb(new Error('Invalid file type'));
-    }}
-});
+   destination: (req, file, cb) => {
+     cb(null, 'uploads');
+   
+   },
+   filename: (req, file, cb) => {
+     cb(null,Date.now() + '-' + file.originalname);
+       categoryLink = `https://back-matgar.onrender.com/uploads/${Date.now() + '-' + file.originalname}`
+   },
+   
+ });
+ 
+ const catUpload = multer({
+   storage: storage,
+   limits: { fileSize: 5000000 }, 
+   fileFilter: (req, file, cb) => {
+     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+      
+       cb(null, true);
+     } else {
+       cb(new Error('Invalid file type'));
+     }}
+ });
+const addCategoryImage = async(req,res)=>{
+ try {
+   if (categoryLink != undefined) {
+      res.status(200).json({"status":httpsStatus.SUCCESS,"data":categoryLink});
+      
+   } else {
+      res.status(400).json({"status":httpsStatus.FAIL,"data":null,"message":"image not upload"});
+   }
+ } catch (error) { 
+    res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
+   
+ }
+}
 const addCategoryAdmin = async(req,res)=>{
   try {
-   
-    upload();
-  
-   res.status(200).json({"messaga":"aaaa"})
-  } catch (error){
-   res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
+    const token = req.headers.token;
+    const category = new Category({
+       categoryName:req.body.categoryName,
+       categoryNameArabic:req.body.categoryNameArabic,
+       categoryDate:Date.now(),
+       categoryImage:req.body.categoryLink
+    });
+    await category.save();
+    res.status(200).json({"status":httpsStatus.SUCCESS,"data":category});
+  } catch (error) {
+    res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
   }
 }
 
  module.exports = {
-   getAllCategories,getAllCategoriesAdmin,deleteCategoryAdmin,addCategoryAdmin,upload,storage
+   getAllCategories,getAllCategoriesAdmin,deleteCategoryAdmin,addCategoryAdmin,catUpload,addCategoryImage
    }
