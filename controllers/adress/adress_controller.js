@@ -42,6 +42,7 @@ const getMyAdresses = async(req,res)=>{
     else{
         const adress =  new Adress(
             {
+                adressName:req.body.adressName,
                 adressCity:req.body.adressCity,
                 adressDistrict:req.body.adressDistrict,
                 adressMiniCipality:req.body.adressMiniCipality,
