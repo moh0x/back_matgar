@@ -40,7 +40,7 @@ const changeFavorites = async(req,res)=>{
             }
         })
         await newItem.save();
-        await item.save();
+      
        
         res.status(200).json({"status":httpsStatus.SUCCESS,"data":"add favorite success"});
     }
