@@ -29,7 +29,7 @@ const changeItemCart = async(req,res)=>{
                     }
                 });
                 await newUser.save();
-                res.status(400).json({"status":httpsStatus.SUCCESS,"data":newUser.cart});
+                res.status(200).json({"status":httpsStatus.SUCCESS,"data":newUser.cart});
             }
         } else {
           if (count != 0) {
@@ -58,7 +58,7 @@ const changeItemCart = async(req,res)=>{
                     }
                 });
                 await newUser.save();
-                res.status(400).json({"status":httpsStatus.SUCCESS,"data":newUser.cart});
+                res.status(200).json({"status":httpsStatus.SUCCESS,"data":newUser.cart});
              } else {
                 const newUser = await User.findByIdAndUpdate(user.id,{
                     $push:{
@@ -71,7 +71,7 @@ const changeItemCart = async(req,res)=>{
                     }
                 });
                 await newUser.save();
-                res.status(400).json({"status":httpsStatus.SUCCESS,"data":newUser.cart});
+                res.status(200).json({"status":httpsStatus.SUCCESS,"data":newUser.cart});
              }
           }else if(count == 0){
             const newList = [];
@@ -91,7 +91,7 @@ const changeItemCart = async(req,res)=>{
                 }
             })
                 await newUser.save();
-                res.status(400).json({"status":httpsStatus.SUCCESS,"data":newUser.cart});
+                res.status(200).json({"status":httpsStatus.SUCCESS,"data":newUser.cart});
            
           }
         }
