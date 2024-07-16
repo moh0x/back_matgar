@@ -45,11 +45,13 @@ const itemsSchema = new mongoose.Schema({
        itemPrice:{
         type:Number,
         required:true,
-       
+        minLength:6,
+        maxLength:200
        },
        itemDisCount:{
         type:Number,
-       
+        minLength:6,
+        maxLength:100
        },
        itemCatId:{
         type:String,
@@ -80,20 +82,7 @@ const itemsSchema = new mongoose.Schema({
         required:true,
         minLength:6,
         maxLength:200
-       },
-       itemCity:{
-        type:String,
-        maxLength:3,
-        required:true
-       },
-       itemMiniCipality:{
-        type:String,
-        maxLength:30
-       },
-       itemDistrict:{
-        type:String,
-        maxLength:30
-       },
+       },      
        itemImages:{
         type:Array,
         default:[]
@@ -106,3 +95,4 @@ const itemsSchema = new mongoose.Schema({
 });
 const Item = mongoose.model("Item",itemsSchema);
 module.exports = {Item};
+
