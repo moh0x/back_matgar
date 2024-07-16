@@ -15,7 +15,7 @@ router.get('/getLatestItem',verifyToken,verifyUser,itemsControoler.getLatestItem
 router.get('/admin/getLatestItemItemsVerify',verifyToken,verifyAdmin,itemsControoler.getLatestItemsVerifyAdmin);
 router.get('/admin/getLatestItemItemsNotVerify',verifyToken,verifyAdmin,itemsControoler.getLatestItemsNotVerifyAdmin);
 router.delete('/admin/deleteItem',verifyToken,verifyAdmin,itemsControoler.deleteItemAdmin);
-router.patch('/admin/changeStatusVerify',verifyToken,itemsControoler.changeItemStatusAdmin);
+router.patch('/admin/changeStatusVerify',verifyToken,verifyAdmin,itemsControoler.changeItemStatusAdmin);
 router.post('/addImage',verifyToken,verifyVendor,verifyAdd,itemsControoler.iUpload.single('image'),itemsControoler.addImage);
 router.post('/addProduct',verifyToken,verifyVendor,verifyAdd,itemsControoler.addProduct);
 router.get('/vendor/getLatestItemItemsVerify',verifyToken,verifyVendor,itemsControoler.getLatestItemsVerifyVendor);
