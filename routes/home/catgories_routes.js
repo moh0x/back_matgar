@@ -4,9 +4,11 @@ const { verifyToken } = require("../../utility/verify_token");
 const categoriesControoler = require('../../controllers/home/categories_controller');
 const { verifyAdmin } = require('../../utility/verify_role_admin');
 const multer = require('multer');
-router.get('/getAllCategories',verifyToken,categoriesControoler.getAllCategories);
+const { verifyUser } = require('../../utility/verify_role_user');
+router.get('/getAllCategories',verifyToken,verifyUser,categoriesControoler.getAllCategories);
 router.get('/getAllCategoriesAdmin',verifyToken,verifyAdmin,categoriesControoler.getAllCategoriesAdmin);
-router.delete('/delete',verifyToken,verifyAdmin,categoriesControoler.deleteCategoryAdmin);
-router.post('/add',verifyToken,verifyAdmin,categoriesControoler.upload.single('file'),categoriesControoler.addCategoryAdmin);
+router.delete('/admin/delete',verifyToken,verifyAdmin,categoriesControoler.deleteCategoryAdmin);
+router.post('/admin/addCategoryImage',verifyToken,verifyAdmin,categoriesControoler.catUpload.single('image'),categoriesControoler.addCategoryImage);
+router.post('/admin/addBanner',verifyToken,verifyAdmin,categoriesControoler.addCategoryAdmin);
 module.exports = 
 router
