@@ -6,11 +6,12 @@ const { verifyAdmin } = require('../../utility/verify_role_admin');
 const multer = require('multer');
 const { verifyVendor } = require('../../utility/verify_role_vendor');
 const { verifyAdd } = require('../../utility/verify_add');
-router.get('/getAllItems',verifyToken,itemsControoler.getAllItems);
-router.get('/getSearchItem',verifyToken,itemsControoler.getSearchItems);
-router.get('/getLikesItem',verifyToken,itemsControoler.getLikesItems);
-router.get('/getCartItem',verifyToken,itemsControoler.getCartItems);
-router.get('/getLatestItem',verifyToken,itemsControoler.getLatestItems);
+const { verifyUser } = require('../../utility/verify_role_user');
+router.get('/getAllItems',verifyToken,verifyUser,itemsControoler.getAllItems);
+router.get('/getSearchItem',verifyToken,verifyUser,itemsControoler.getSearchItems);
+router.get('/getLikesItem',verifyToken,verifyUser,itemsControoler.getLikesItems);
+router.get('/getCartItem',verifyToken,verifyUser,itemsControoler.getCartItems);
+router.get('/getLatestItem',verifyToken,verifyUser,itemsControoler.getLatestItems);
 router.get('/admin/getLatestItemItemsVerify',verifyToken,verifyAdmin,itemsControoler.getLatestItemsVerifyAdmin);
 router.get('/admin/getLatestItemItemsNotVerify',verifyToken,verifyAdmin,itemsControoler.getLatestItemsNotVerifyAdmin);
 router.delete('/admin/deleteItem',verifyToken,verifyAdmin,itemsControoler.deleteItemAdmin);
@@ -23,3 +24,4 @@ router.delete('/vendor/deleteItem',verifyToken,verifyVendor,itemsControoler.dele
 router.get('/vendor/verifyAdd',verifyToken,verifyVendor,itemsControoler.verifyAddP);
 module.exports = 
 router
+
