@@ -137,7 +137,7 @@ const storage = multer.diskStorage({
    },
    filename: (req, file, cb) => {
      cb(null,Date.now() + '-' + file.originalname);
-       itemLink = `https://localhost:8000/uploads/${Date.now() + '-' + file.originalname}`
+       itemLink = `https://back-matgar.onrender.com/uploads/${Date.now() + '-' + file.originalname}`
    },
    
  });
@@ -170,7 +170,6 @@ const addImage = async(req,res)=>{
  try {
    const token = req.headers.token;
    const vendor = await Vendor.findOne({token:token});
-   console.log(itemLink);
    const item = new Item({
       itemNameArabic:req.body.itemNameArabic,
       itemNameEnglish:req.body.itemNameEnglish,
@@ -191,14 +190,10 @@ const addImage = async(req,res)=>{
       itemMiniCipality:vendor.vendorMiniCipality,
       itemDistrict:vendor.vendorDistrict,
       vendorId:vendor.id
-
-
-
    });
    await item.save();
    res.status(200).json({"status":httpsStatus.SUCCESS,"data":item});
  } catch (error) {
-     console.log(error);
    res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
  }
     
@@ -264,3 +259,4 @@ const verifyAddP=async (req, res, next)=> {
  module.exports = {
     getAllItems,getSearchItems,getLikesItems,getCartItems,getLatestItems,deleteItemAdmin,changeItemStatusAdmin,getLatestItemsNotVerifyAdmin,getLatestItemsVerifyAdmin,addProduct,iUpload,addImage,getLatestItemsVerifyVendor,getLatestItemsNotVerifyVendor,deleteItemVendor,verifyAddP
    }
+
