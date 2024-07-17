@@ -32,7 +32,7 @@ const addVendorPay = async(req,res)=>{
                   }
                 }
               });
-              const newVendor =await Vendor.findByIdAndUpdate(req.body.VendorId,{
+              const newVendor =await Vendor.findByIdAndUpdate(req.body.vendorId,{
                 $set:{
                     sales:0,
                     myFreeSales:0,
