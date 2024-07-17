@@ -90,6 +90,7 @@ const addBanner = async(req,res)=>{
     await banner.save();
     res.status(200).json({"status":httpsStatus.SUCCESS,"data":banner});
   } catch (error) {
+      console.log(error);
     res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
   }
 }
