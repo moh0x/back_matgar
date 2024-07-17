@@ -6,7 +6,7 @@ const bannerSchema = new mongoose.Schema({
         minLength:3,
         maxLength:30
     },
-       categoryImage:{
+       bannerImage:{
         type:String,
         required:true,
         minLength:6,
