@@ -42,6 +42,7 @@ const addDeliviryPay = async(req,res)=>{
                 }
               })
               await newDeliviry.save();
+          await deliviryPay.save();
             res.status(200).json({"status":httpsStatus.SUCCESS,"data":deliviryPay});
         } else {
             res.status(400).json({"status":httpsStatus.FAIL,"data":null,"message":"money 0"});
