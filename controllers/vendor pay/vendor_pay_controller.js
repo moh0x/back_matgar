@@ -40,6 +40,7 @@ const addVendorPay = async(req,res)=>{
                 }
               })
               await newVendor.save();
+          await vendorPay.save();
             res.status(200).json({"status":httpsStatus.SUCCESS,"data":vendorPay});
         } else {
             res.status(400).json({"status":httpsStatus.FAIL,"data":null,"message":"money 0"});
