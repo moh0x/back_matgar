@@ -9,6 +9,6 @@ router.get('/getAllCategories',verifyToken,verifyUser,categoriesControoler.getAl
 router.get('/getAllCategoriesAdmin',verifyToken,verifyAdmin,categoriesControoler.getAllCategoriesAdmin);
 router.delete('/admin/delete',verifyToken,verifyAdmin,categoriesControoler.deleteCategoryAdmin);
 router.post('/admin/addCategoryImage',verifyToken,verifyAdmin,categoriesControoler.catUpload.single('image'),categoriesControoler.addCategoryImage);
-router.post('/admin/addBanner',verifyToken,verifyAdmin,categoriesControoler.addCategoryAdmin);
+router.post('/admin/addCategory',verifyToken,verifyAdmin,categoriesControoler.addCategoryAdmin);
 module.exports = 
 router
