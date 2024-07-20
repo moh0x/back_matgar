@@ -18,6 +18,7 @@ router.get('/admin/getAllDeliviriesAgreeAdmin',verifyToken,verifyAdmin,deliviryC
 router.get('/admin/getAllDeliviriesNotAgreeAdmin',verifyToken,verifyAdmin,deliviryControoler.getAllDeliviriesNotAgreeAdmin);
 router.patch('/admin/changeStatusAgree',verifyToken,verifyAdmin,deliviryControoler.changeDeliviryStatusAdmin);
 router.delete('/admin/deleteDeliviry',verifyToken,verifyAdmin,deliviryControoler.deleteDeliviryAdmin);
+router.delete('/deleteDeliviry',body("password").isString().isLength({min:8,max:30}).withMessage("type valid password"),verifyToken,verifyDeliviry,deliviryControoler.deleteFunc);
   module.exports = 
     router
   
