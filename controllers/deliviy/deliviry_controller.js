@@ -262,6 +262,19 @@ const changeDeliviryStatusAdmin = async(req,res)=>{  try {
        const deliviryId = req.body.deliviryId;
        const delivirySer = await Deliviry.findById(deliviryId);
      if (delivirySer) {
+      const orders = await Order.find({orderDeliviryId:deliviryId,orderStatusId:"deliviry"});
+      for (let index = 0; index < orders.length; index++) {
+        const newOrder =   await Order.findByIdAndUpdate(orders[index].id,{
+          $set:{
+            orderStatusId:"agree",
+            orderDeliviryEmail:" ",
+            orderDeliviryId:" ",
+            orderDeliviryName:" ",
+            orderDeliviryPhone:" "
+          }
+        });
+        await newOrder.save();
+      }     
      const deliviry = await Deliviry.findByIdAndDelete(deliviryId);
      res.status(200).json({"status":httpsStatus.SUCCESS});
      } else {
@@ -271,6 +284,56 @@ const changeDeliviryStatusAdmin = async(req,res)=>{  try {
      res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
     }
  }
+ const deleteFunc = async(req,res)=>{
+   
+  try {
+    const token = req.headers.token;
+     const deliviry = await Deliviry.findOne({token:token});
+  const valid = validationResult (req);
+  const passwordMatch = await bcrypt.compare(req.body.password,deliviry.password);
+if (valid.isEmpty()) {
+ if (deliviry) {
+     if (passwordMatch == true) {  
+      const orders = await Order.find({orderDeliviryId:deliviry.id,orderStatusId:"deliviry"});
+      for (let index = 0; index < orders.length; index++) {
+        const newOrder =   await Order.findByIdAndUpdate(orders[index].id,{
+          $set:{
+            orderStatusId:"agree",
+            orderDeliviryEmail:" ",
+            orderDeliviryId:" ",
+            orderDeliviryName:" ",
+            orderDeliviryPhone:" "
+          }
+        });
+        await newOrder.save();
+      }     
+             await Deliviry.findByIdAndDelete(deliviry.id);      
+             const courier = new CourierClient(
+                 { authorizationToken: "pk_prod_5T2N91YKAJ4FKGH0YAM3X4NKRB0V"});
+               const { requestId } =  courier.send({
+                 message: {
+                   content: {
+                     title: "confirm your email",
+                     body: `your account hase been deleted`
+                   },
+                   to: {
+                     email: `${deliviry.email}`
+                   }
+                 }
+               });
+               res.status(200).json({"status":httpsStatus.SUCCESS,"data":"success"});
+         }  
+    } else {
+     res.status(400).json({"status":httpsStatus.FAIL,"data":null,"message":"there is no user with this email"});
+    }
+} else {
+ res.status(400).json({"status":httpsStatus.FAIL,"data":null,"message":"check your input"});
+}
+  } catch (error) {
+     res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
+  }
+
+}
  module.exports = {
-  registerFunc,loginFunc,sendResetCodeFunc,resetPasswordFunc,confirmAccountFunc,getDeliviryInfo,getAllDeliviriesAgreeAdmin,getAllDeliviriesNotAgreeAdmin,changeDeliviryStatusAdmin,deleteDeliviryAdmin
+  registerFunc,loginFunc,sendResetCodeFunc,resetPasswordFunc,confirmAccountFunc,getDeliviryInfo,getAllDeliviriesAgreeAdmin,getAllDeliviriesNotAgreeAdmin,changeDeliviryStatusAdmin,deleteDeliviryAdmin,deleteFunc
  }
