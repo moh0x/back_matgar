@@ -535,6 +535,19 @@ const getOrdersVendor = async(req,res)=>{
     res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
    }
 }
+const getOrderArchiveDeliviry = async(req,res)=>{
+  const limit = 15;
+  const page = req.body.page || 1;
+  const skip = (page - 1) * limit;
+   try {
+    const orders = await Order.find({orderStatusId:"archive"}).sort({orderFirstDate:-1}).limit(limit).skip(skip); 
+   
+       res.status(200).json({"status":httpsStatus.SUCCESS,"data":orders}); 
+   } catch (error){
+     console.log(error);
+    res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
+   }
+}
  module.exports = {
-    getMyOrders,addOrder,deleteOrder,getDelivirySummary,getMySummary,getOrderFirstAdmin,getOrderAgreeAdmin,getOrderNotAgreeAdmin,getOrderDeliviryAdmin,getOrderDeliviriedAdmin,getOrderFinishAdmin,getOrderArchiveAdmin,finshOrderAdmin,archiveOrderAdmin,deleteOrderAdmin,getOrderAgreeDeliviry,deliviryOrderDeliviry,deliviriedOrderDeliviry,getOrdersVendor,agreeOrderVendor,deleteOrderVendor,notAgreeOrderVendor,getOrderDeliviry,unDeliviryOrderDeliviry
+    getMyOrders,addOrder,deleteOrder,getDelivirySummary,getMySummary,getOrderFirstAdmin,getOrderAgreeAdmin,getOrderNotAgreeAdmin,getOrderDeliviryAdmin,getOrderDeliviriedAdmin,getOrderFinishAdmin,getOrderArchiveAdmin,finshOrderAdmin,archiveOrderAdmin,deleteOrderAdmin,getOrderAgreeDeliviry,deliviryOrderDeliviry,deliviriedOrderDeliviry,getOrdersVendor,agreeOrderVendor,deleteOrderVendor,notAgreeOrderVendor,getOrderDeliviry,unDeliviryOrderDeliviry,getOrderArchiveDeliviry
    }
