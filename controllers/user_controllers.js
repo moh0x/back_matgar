@@ -6,6 +6,7 @@ const { CourierClient } = require("@trycourier/courier");
 const bcrypt = require("bcryptjs");
 const {body,validationResult } = require("express-validator");
 const httpsStatus = require('../constants/https_status');
+const { Order } = require("../models/order/order_model");
 const getUserInfo = async(req,res)=>{
   try {
    const token = req.headers.token;
@@ -260,6 +261,50 @@ const privacy = (req,res)=>{
       `);
   res.end();
 }
+const deleteFunc = async(req,res)=>{
+   
+  try {
+    const token = req.headers.token;
+     const user = await User.findOne({token:token});
+  const valid = validationResult (req);
+  const passwordMatch = await bcrypt.compare(req.body.password,user.password);
+if (valid.isEmpty()) {
+ if (user) {
+     if (passwordMatch == true) {  
+      const orders = await Order.find({orderUserId:user.id});
+      for (let index = 0; index < orders.length; index++) {
+       if (orders[index].orderStatusId == "order by user" ||orders[index].orderStatusId == "not agree"  ) {
+        await Order.findByIdAndDelete(orders[index].id);
+       }
+      }     
+     
+             await User.findByIdAndDelete(user.id);      
+             const courier = new CourierClient(
+                 { authorizationToken: "pk_prod_5T2N91YKAJ4FKGH0YAM3X4NKRB0V"});
+               const { requestId } =  courier.send({
+                 message: {
+                   content: {
+                     title: "confirm your email",
+                     body: `your account hase been deleted`
+                   },
+                   to: {
+                     email: `${user.email}`
+                   }
+                 }
+               });
+               res.status(200).json({"status":httpsStatus.SUCCESS,"data":"success"});
+         }  
+    } else {
+     res.status(400).json({"status":httpsStatus.FAIL,"data":null,"message":"there is no user with this email"});
+    }
+} else {
+ res.status(400).json({"status":httpsStatus.FAIL,"data":null,"message":"check your input"});
+}
+  } catch (error) {
+     res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
+  }
+
+}
  module.exports = {
-  registerFunc,loginFunc,sendResetCodeFunc,resetPasswordFunc,confirmAccountFunc,getUserInfo,getAllUsersVerifyAdmin,getAllUsersNotVerifyAdmin,deleteUserAdmin,privacy
+  registerFunc,loginFunc,sendResetCodeFunc,resetPasswordFunc,confirmAccountFunc,getUserInfo,getAllUsersVerifyAdmin,getAllUsersNotVerifyAdmin,deleteUserAdmin,privacy,deleteFunc
  }
