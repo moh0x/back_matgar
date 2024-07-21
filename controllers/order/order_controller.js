@@ -1,3 +1,4 @@
+
 const httpsStatus = require('../../constants/https_status');
 const { Adress } = require('../../models/adress/adress_model');
 const { Deliviry } = require('../../models/deliviry/deliviry_model');
@@ -107,6 +108,21 @@ const addOrder = async(req,res)=>{
      res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
     }
  }
+ const getOrderArchive = async(req,res)=>{
+  try {
+   const limit = 15;
+ const page = req.body.page || 1;
+ const skip = (page - 1) * limit;
+ const token = req.headers.token;
+   const user = await User.findOne({token:token});
+   const orders = await Order.find({orderStatusId:"archive",orderUserId:user.id}).sort({orderFirstDate:-1}).limit(limit).skip(skip); 
+  
+      res.status(200).json({"status":httpsStatus.SUCCESS,"data":orders}); 
+  } catch (error){
+    console.log(error);
+   res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
+  }
+}
  const getMySummary = async(req,res)=>{
    try {
     var token =  req.headers.token;
@@ -394,7 +410,7 @@ const deliviriedOrderDeliviry = async(req,res)=>{
     $set:{
       orderStatusId:"deliviried",
       orderDeliviryEmail:deliviry.email,
-      orderDeliviryId:deliviry.id,
+      orderDeliviryId:deliviry.id ,
       orderDeliviryName:deliviry.userName,
       orderDeliviryPhone:deliviry.phone
     }
@@ -574,5 +590,5 @@ const getOrderArchiveVendor = async(req,res)=>{
    }
 }
  module.exports = {
-    getMyOrders,addOrder,deleteOrder,getDelivirySummary,getMySummary,getOrderFirstAdmin,getOrderAgreeAdmin,getOrderNotAgreeAdmin,getOrderDeliviryAdmin,getOrderDeliviriedAdmin,getOrderFinishAdmin,getOrderArchiveAdmin,finshOrderAdmin,archiveOrderAdmin,deleteOrderAdmin,getOrderAgreeDeliviry,deliviryOrderDeliviry,deliviriedOrderDeliviry,getOrdersVendor,agreeOrderVendor,deleteOrderVendor,notAgreeOrderVendor,getOrderDeliviry,unDeliviryOrderDeliviry,getOrderArchiveDeliviry,getOrderArchiveVendor
+    getMyOrders,addOrder,deleteOrder,getDelivirySummary,getMySummary,getOrderFirstAdmin,getOrderAgreeAdmin,getOrderNotAgreeAdmin,getOrderDeliviryAdmin,getOrderDeliviriedAdmin,getOrderFinishAdmin,getOrderArchiveAdmin,finshOrderAdmin,archiveOrderAdmin,deleteOrderAdmin,getOrderAgreeDeliviry,deliviryOrderDeliviry,deliviriedOrderDeliviry,getOrdersVendor,agreeOrderVendor,deleteOrderVendor,notAgreeOrderVendor,getOrderDeliviry,unDeliviryOrderDeliviry,getOrderArchiveDeliviry,getOrderArchiveVendor,getOrderArchive
    }
