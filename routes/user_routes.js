@@ -17,7 +17,8 @@ router.post('/sendResetCode',userControoler.sendResetCodeFunc);
 router.get('/admin/getAllUsersVerify',verifyToken,verifyAdmin,userControoler.getAllUsersVerifyAdmin)
 router.get('/admin/getAllUsersNotVerify',verifyToken,verifyAdmin,userControoler.getAllUsersNotVerifyAdmin)
 router.delete('/admin/deleteUser',verifyToken,verifyAdmin,userControoler.deleteUserAdmin);
-router.get('/privacy',userControoler.privacy)
+router.get('/privacy',userControoler.privacy);
+router.delete('/deleteUser',body("password").isString().isLength({min:8,max:30}).withMessage("type valid password"),verifyToken,verifyUser,userControoler.deleteFunc);
   module.exports = 
     router
   
