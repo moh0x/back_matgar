@@ -11,6 +11,7 @@ router.get('/mySummary',verifyToken,verifyAdmin,orderController.getMySummary);
 router.get('/delivirySummary',verifyToken,verifyDeliviry,orderController.getDelivirySummary);
 router.post('/addOrder',verifyToken,verifyUser,orderController.addOrder);
 router.delete('/deleteOrder',verifyToken,verifyUser,orderController.deleteOrder);
+router.get('/archive',verifyToken,verifyUser,orderController.getOrderArchive);
 router.get('/admin/first',verifyToken,verifyAdmin,orderController.getOrderFirstAdmin);
 router.get('/admin/agree',verifyToken,verifyAdmin,orderController.getOrderAgreeAdmin);
 router.get('/admin/notAgree',verifyToken,verifyAdmin,orderController.getOrderNotAgreeAdmin);
