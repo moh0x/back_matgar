@@ -285,7 +285,7 @@ if (valid.isEmpty()) {
      if (passwordMatch == true) {  
       const orders = await Order.find({orderVendorId:vendor.id});
       for (let index = 0; index < orders.length; index++) {
-       if (orders[index].orderStatusId == "order by id" || orders[index].orderStatusId == "agree" || orders[index].orderStatusId == "not agree"  ) {
+       if (orders[index].orderStatusId == "order by user" || orders[index].orderStatusId == "agree" || orders[index].orderStatusId == "not agree"  ) {
         await Order.findByIdAndDelete(orders[index].id);
        }
       }     
