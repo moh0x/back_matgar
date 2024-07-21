@@ -70,12 +70,12 @@ const addOrder = async(req,res)=>{
      const user = await User.findOne({token:token});
      const order = await Order.findById(req.body.orderId);
      if (order.orderUserId == user._id) {
-       if (order.orderStatusId == "order by user") {
+       if (order.orderStatusId == "first") {
         const orderDelete = await Order.findByIdAndDelete(req.body.orderId);
      
         res.status(200).json({"status":httpsStatus.SUCCESS,"data":"success"});
        } else {
-        res.status(400).json({"status":httpsStatus.FAIL,"data":null,"message":"you can delete order when status is order by user"}); 
+        res.status(400).json({"status":httpsStatus.FAIL,"data":null,"message":"you can delete order when status is first"}); 
        }
      } else {
         res.status(400).json({"status":httpsStatus.FAIL,"data":null,"message":"you don't have permission"}); 
@@ -440,6 +440,21 @@ const getOrderAgreeDeliviry = async(req,res)=>{
     res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
    }
 }
+const getOrderArchiveDeliviry = async(req,res)=>{
+   try {
+    const limit = 15;
+  const page = req.body.page || 1;
+  const skip = (page - 1) * limit;
+  const token = req.headers.token;
+    const deliviry = await Deliviry.findOne({token:token});
+    const orders = await Order.find({orderStatusId:"archive",orderDeliviryId:deliviry.id}).sort({orderFirstDate:-1}).limit(limit).skip(skip); 
+   
+       res.status(200).json({"status":httpsStatus.SUCCESS,"data":orders}); 
+   } catch (error){
+     console.log(error);
+    res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
+   }
+}
 const deleteOrderVendor = async(req,res)=>{
   try {
     const token = req.headers.token;
@@ -448,7 +463,7 @@ const deleteOrderVendor = async(req,res)=>{
   if (order   ) {
     
  if (order.orderVendorId == vendor.id) {
-  if (order.orderStatusId == "order by user" || order.orderStatusId == "not agree") {
+  if (order.orderStatusId == "first" || order.orderStatusId == "not agree") {
     const newOrder =   await Order.findByIdAndUpdate(req.body.orderId,{
       $set:{
         orderStatusId:"agree",
@@ -476,7 +491,7 @@ const notAgreeOrderVendor = async(req,res)=>{
     const vendor = await Vendor.findOne({token:token});
   const order = await Order.findById(req.body.orderId);
   if (order) {
- if (order.orderStatusId == "order by user" && order.orderVendorId == vendor.id) {
+ if (order.orderStatusId == "first" && order.orderVendorId == vendor.id) {
   const newOrder =   await Order.findByIdAndUpdate(req.body.orderId,{
     $set:{
       orderStatusId:"not agree",
@@ -501,7 +516,7 @@ const agreeOrderVendor = async(req,res)=>{
     const vendor = await Vendor.findOne({token:token});
   const order = await Order.findById(req.body.orderId);
   if (order) {
- if (order.orderStatusId == "order by user" && order.orderVendorId == vendor.id) {
+ if (order.orderStatusId == "first" && order.orderVendorId == vendor.id) {
   const newOrder =   await Order.findByIdAndUpdate(req.body.orderId,{
     $set:{
       orderStatusId:"agree",
@@ -535,12 +550,16 @@ const getOrdersVendor = async(req,res)=>{
     res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
    }
 }
-const getOrderArchiveDeliviry = async(req,res)=>{
-  const limit = 15;
-  const page = req.body.page || 1;
-  const skip = (page - 1) * limit;
+const getOrderArchiveVendor = async(req,res)=>{
+ 
    try {
-    const orders = await Order.find({orderStatusId:"archive"}).sort({orderFirstDate:-1}).limit(limit).skip(skip); 
+    const limit = 15;
+    const page = req.body.page || 1;
+    const skip = (page - 1) * limit;
+    const token = req.headers.token;
+  
+    const vendor = await Vendor.findOne({token:token});
+    const orders = await Order.find({orderStatusId:"archive",orderVendorId:vendor.id}).sort({orderFirstDate:-1}).limit(limit).skip(skip); 
    
        res.status(200).json({"status":httpsStatus.SUCCESS,"data":orders}); 
    } catch (error){
@@ -549,5 +568,5 @@ const getOrderArchiveDeliviry = async(req,res)=>{
    }
 }
  module.exports = {
-    getMyOrders,addOrder,deleteOrder,getDelivirySummary,getMySummary,getOrderFirstAdmin,getOrderAgreeAdmin,getOrderNotAgreeAdmin,getOrderDeliviryAdmin,getOrderDeliviriedAdmin,getOrderFinishAdmin,getOrderArchiveAdmin,finshOrderAdmin,archiveOrderAdmin,deleteOrderAdmin,getOrderAgreeDeliviry,deliviryOrderDeliviry,deliviriedOrderDeliviry,getOrdersVendor,agreeOrderVendor,deleteOrderVendor,notAgreeOrderVendor,getOrderDeliviry,unDeliviryOrderDeliviry,getOrderArchiveDeliviry
+    getMyOrders,addOrder,deleteOrder,getDelivirySummary,getMySummary,getOrderFirstAdmin,getOrderAgreeAdmin,getOrderNotAgreeAdmin,getOrderDeliviryAdmin,getOrderDeliviriedAdmin,getOrderFinishAdmin,getOrderArchiveAdmin,finshOrderAdmin,archiveOrderAdmin,deleteOrderAdmin,getOrderAgreeDeliviry,deliviryOrderDeliviry,deliviriedOrderDeliviry,getOrdersVendor,agreeOrderVendor,deleteOrderVendor,notAgreeOrderVendor,getOrderDeliviry,unDeliviryOrderDeliviry,getOrderArchiveDeliviry,getOrderArchiveVendor
    }
