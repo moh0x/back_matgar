@@ -418,9 +418,15 @@ const getOrderDeliviry = async(req,res)=>{
   const skip = (page - 1) * limit;
   const token = req.headers.token;
   const deliviry = await Deliviry.findOne({token:token});
+  const orders = [];
    try {
-    const orders = await Order.find({orderStatusId:"deliviry",orderDeliviryId:deliviry.id}).sort({orderFirstDate:-1}).limit(limit).skip(skip); 
-   
+    const order = await Order.find({orderDeliviryId:deliviry.id}).sort({orderFirstDate:-1}).limit(limit).skip(skip); 
+   for (let index = 0; index < order.length; index++) {
+    if (order[index].orderStatusId == "deliviried" || order[index].orderStatusId == "deliviry" || order[index].orderStatusId == "finish") {
+      orders.unshift(order[index]);
+    }
+    
+   }
        res.status(200).json({"status":httpsStatus.SUCCESS,"data":orders}); 
    } catch (error){
      console.log(error);
