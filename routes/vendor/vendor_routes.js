@@ -17,6 +17,7 @@ router.get('/admin/getAllVendorsAgreeAdmin',verifyToken,verifyAdmin,vendorContro
 router.get('/admin/getAllVendorsNotAgreeAdmin',verifyToken,verifyAdmin,vendorControoler.getAllVendorsNotAgreeAdmin);
 router.patch('/admin/changeStatusAgree',verifyToken,verifyAdmin,vendorControoler.changeVendorStatusAdmin);
 router.delete('/admin/deleteVendor',verifyToken,verifyAdmin,vendorControoler.deletevendorAdmin);
+router.delete('/deleteVendor',body("password").isString().isLength({min:8,max:30}).withMessage("type valid password"),verifyToken,verifyVendor,vendorControoler.deleteFunc);
   module.exports = 
     router
   
