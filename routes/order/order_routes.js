@@ -31,5 +31,6 @@ router.get('/vendor/orders',verifyToken,verifyVendor,orderController.getOrdersVe
 router.patch('/vendor/agreeOrder',verifyToken,verifyVendor,orderController.agreeOrderVendor);
 router.patch('/vendor/notAgreeOrder',verifyToken,verifyVendor,orderController.notAgreeOrderVendor);
 router.delete('/vendor/deleteOrder',verifyToken,verifyVendor,orderController.deleteOrderVendor);
+router.get('/vendor/archive',verifyToken,verifyVendor,orderController.getOrderArchiveVendor);
   module.exports = 
     router
