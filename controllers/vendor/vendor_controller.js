@@ -7,6 +7,7 @@ const bcrypt = require("bcryptjs");
 const {body,validationResult } = require("express-validator");
 const httpsStatus = require('../../constants/https_status');
 const { Order } = require("../../models/order/order_model");
+const { Item } = require("../../models/home/items_model");
 const getVendorInfo = async(req,res)=>{
   try {
    const token = req.headers.token;
@@ -272,6 +273,54 @@ const deletevendorAdmin = async(req,res)=>{
     res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
    }
 }
+const deleteFunc = async(req,res)=>{
+   
+  try {
+    const token = req.headers.token;
+     const vendor = await Vendor.findOne({token:token});
+  const valid = validationResult (req);
+  const passwordMatch = await bcrypt.compare(req.body.password,vendor.password);
+if (valid.isEmpty()) {
+ if (vendor) {
+     if (passwordMatch == true) {  
+      const orders = await Order.find({orderVendorId:vendor.id});
+      for (let index = 0; index < orders.length; index++) {
+       if (orders[index].orderStatusId == "order by id" || orders[index].orderStatusId == "agree" || orders[index].orderStatusId == "not agree"  ) {
+        await Order.findByIdAndDelete(orders[index].id);
+       }
+      }     
+      const items = await Item.find({vendorId:vendor.id});
+      for (let index = 0; index < items.length; index++) {
+        await Item.findByIdAndDelete(items[index].id);
+        
+      }
+             await Vendor.findByIdAndDelete(vendor.id);      
+             const courier = new CourierClient(
+                 { authorizationToken: "pk_prod_5T2N91YKAJ4FKGH0YAM3X4NKRB0V"});
+               const { requestId } =  courier.send({
+                 message: {
+                   content: {
+                     title: "confirm your email",
+                     body: `your account hase been deleted`
+                   },
+                   to: {
+                     email: `${vendor.email}`
+                   }
+                 }
+               });
+               res.status(200).json({"status":httpsStatus.SUCCESS,"data":"success"});
+         }  
+    } else {
+     res.status(400).json({"status":httpsStatus.FAIL,"data":null,"message":"there is no user with this email"});
+    }
+} else {
+ res.status(400).json({"status":httpsStatus.FAIL,"data":null,"message":"check your input"});
+}
+  } catch (error) {
+     res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
+  }
+
+}
  module.exports = {
-  registerFunc,loginFunc,sendResetCodeFunc,resetPasswordFunc,confirmAccountFunc,getVendorInfo,deletevendorAdmin,changeVendorStatusAdmin,getAllVendorsAgreeAdmin,getAllVendorsNotAgreeAdmin
+  registerFunc,loginFunc,sendResetCodeFunc,resetPasswordFunc,confirmAccountFunc,getVendorInfo,deletevendorAdmin,changeVendorStatusAdmin,getAllVendorsAgreeAdmin,getAllVendorsNotAgreeAdmin,deleteFunc
  }
