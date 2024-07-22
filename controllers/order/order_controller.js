@@ -65,13 +65,13 @@ const addOrder = async(req,res)=>{
      res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
     }
  }
- const deleteOrder = async(req,res)=>{
+const deleteOrder = async(req,res)=>{
     try {
      var token =  req.headers.token;
      const user = await User.findOne({token:token});
      const order = await Order.findById(req.body.orderId);
      if (order.orderUserId == user._id) {
-       if (order.orderStatusId == "first") {
+       if (order.orderStatusId == "order by user" || order.orderStatusId == "not agree") {
         const orderDelete = await Order.findByIdAndDelete(req.body.orderId);
      
         res.status(200).json({"status":httpsStatus.SUCCESS,"data":"success"});
