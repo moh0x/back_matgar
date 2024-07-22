@@ -31,6 +31,16 @@ const getMyAdresses = async(req,res)=>{
      res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
     }
  }
+ const verifyAddAdressCon=async (req, res)=> {
+    var token = req.headers.token;
+    const user = await User.findOne({token:token});
+    const adresses = await Adress.find({adressUserId:user.id});
+    if (adresses.length < 5) {
+        res.status(200).json({"status":httpsStatus.SUCCESS});
+    } else {
+      res.status(400).send({ "success": false, "message": "max 100" });
+    }
+  }
  const addAdress = async(req,res)=>{
     try {
      var token =  req.headers.token;
@@ -58,5 +68,5 @@ const getMyAdresses = async(req,res)=>{
     }
  }
  module.exports = {
-    getMyAdresses,addAdress,deleteAdress
+    getMyAdresses,addAdress,deleteAdress,verifyAddAdressCon
    }
