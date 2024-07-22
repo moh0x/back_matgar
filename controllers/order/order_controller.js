@@ -93,16 +93,9 @@ const deleteOrder = async(req,res)=>{
     try {
      var token =  req.headers.token;
      const user = await User.findOne({token:token});
-     const orders = await Order.find({orderUserId:user._id},{orderUserId:false}).sort({orderFirstDate:-1}).limit(limit).skip(skip); 
-     const orderRet = [];
-     for (let index = 0; index < orders.length; index++) {
-        const product = await Item.findById(orders[index].orderProductId);
-        orderRet.unshift({
-            "order":orders[index],
-            "item":product
-        });
-     }
-        res.status(200).json({"status":httpsStatus.SUCCESS,"data":orderRet}); 
+     const orders = await Order.find({orderUserId:user._id}).sort({orderFirstDate:-1}).limit(limit).skip(skip); 
+    
+        res.status(200).json({"status":httpsStatus.SUCCESS,"data":orders}); 
     } catch (error){
       console.log(error);
      res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
