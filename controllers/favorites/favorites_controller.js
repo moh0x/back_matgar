@@ -12,9 +12,9 @@ const changeFavorites = async(req,res)=>{
         const newFav = [];
        for (let index = 0; index < item.itemLikesArray.length; index++) {
        if (item.itemLikesArray[index] != userId) {
-        newFav.unshift(item.itemLikesArray[i] );
+        newFav.unshift(item.itemLikesArray[index]);
        }
-        
+     
        }
        const newItemArr =  await Item.findByIdAndUpdate(itemId,{
             $set:{
@@ -36,11 +36,13 @@ const changeFavorites = async(req,res)=>{
         const number= item.itemLikesCount + 1;
         const newItem=  await Item.findByIdAndUpdate(itemId,{
             $set:{
-                itemLikesCount:number
+                itemLikesCount:number,
+              
+            },$push:{
+            itemLikesArray:userId
             }
         })
         await newItem.save();
-      
        
         res.status(200).json({"status":httpsStatus.SUCCESS,"data":"add favorite success"});
     }
