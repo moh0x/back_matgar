@@ -480,7 +480,7 @@ const deleteOrderVendor = async(req,res)=>{
  if (order.orderVendorId == vendor.id) {
   if (order.orderStatusId == "order by user" || order.orderStatusId == "not agree") {
     const newOrder =   await Order.findByIdAndDelete(req.body.orderId)
-    await newOrder.save();
+   
     res.status(200).json({"status":httpsStatus.SUCCESS,"data":newOrder}); 
    } else {
     res.status(400).json({"status":httpsStatus.FAIL,"data":null,"message":"status fail"});
