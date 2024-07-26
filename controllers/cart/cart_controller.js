@@ -97,27 +97,28 @@ const changeItemCart = async(req,res)=>{
         }
     }
    } else {
-if (itemIds.includes(itemId)) {
-                const cartRet = [];
-                for (let index = 0; index < cartListItemsIds.length; index++) {
-
-                    if (cartListItemsIds[index]['itemId'] != itemId) {
-                        cartRet.unshift(cartListItemsIds[index]);
-                    }
-                    
-                }
-                cartRet.unshift({
-                    "itemId":itemId,
-                    "count":count,
-                    "details":details == null ? " " : details
-                })
-                const newUser = await User.findByIdAndUpdate(user.id,{
-                    $set:{
-                        cart:cartRet
-                    }
-                });
-                await newUser.save();
-                res.status(200).json({"status":httpsStatus.SUCCESS,"data":newUser.cart});
+    if(count == 0){
+        const newList = [];
+        for (let index = 0; index < cartListItemsIds.length; index++) {
+           if (cartListItemsIds[index]['itemId'] != itemId) {
+            newList.unshift({
+                "itemId":cartListItemsIds[index]['itemId'] ,
+                 "count":cartListItemsIds[index]['count'] ,
+                  "details":cartListItemsIds[index]['details'] ,
+            })
+           }
+         
+        }
+        const newUser = await User.findByIdAndUpdate(user.id,{
+            $set:{
+                cart:newList
+            }
+        })
+            await newUser.save();
+            res.status(200).json({"status":httpsStatus.SUCCESS,"data":newUser.cart});
+       
+      }else{
+     res.status(400).json({"status":httpsStatus.FAIL,"data":null,"message":"max 20"});}
    }
     } catch (error) {
      console.log(error);
