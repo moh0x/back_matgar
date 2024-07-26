@@ -97,7 +97,27 @@ const changeItemCart = async(req,res)=>{
         }
     }
    } else {
-     res.status(400).json({"status":httpsStatus.FAIL,"data":null,"message":"max 20"});
+if (itemIds.includes(itemId)) {
+                const cartRet = [];
+                for (let index = 0; index < cartListItemsIds.length; index++) {
+
+                    if (cartListItemsIds[index]['itemId'] != itemId) {
+                        cartRet.unshift(cartListItemsIds[index]);
+                    }
+                    
+                }
+                cartRet.unshift({
+                    "itemId":itemId,
+                    "count":count,
+                    "details":details == null ? " " : details
+                })
+                const newUser = await User.findByIdAndUpdate(user.id,{
+                    $set:{
+                        cart:cartRet
+                    }
+                });
+                await newUser.save();
+                res.status(200).json({"status":httpsStatus.SUCCESS,"data":newUser.cart});
    }
     } catch (error) {
      console.log(error);
