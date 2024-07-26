@@ -10,7 +10,7 @@ const changeItemCart = async(req,res)=>{
      const details = req.body.details;
      const cartListItemsIds = user.cart;
      const newObject = [];
-   if (cartListItemsIds.length < 2) {
+   if (cartListItemsIds.length < 3) {
     if (count > 10) {
         res.status(400).json({"status":httpsStatus.FAIL,"data":null,"message":"count max 10"});
     } else {
