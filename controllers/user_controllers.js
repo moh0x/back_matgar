@@ -284,7 +284,7 @@ if (valid.isEmpty()) {
                const { requestId } =  courier.send({
                  message: {
                    content: {
-                     title: "confirm your email",
+                     title: "delete account",
                      body: `your account hase been deleted`
                    },
                    to: {
