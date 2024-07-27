@@ -148,7 +148,7 @@ const deleteOrder = async(req,res)=>{
       salesMoney = salesMoney + vendors[index].myFreeSales        
   }
     all = sales + shipping;
-    allMoney = salesMoney - shippingMoney;
+    allMoney = salesMoney + shippingMoney;
     myAllFree = myFreesales + myFreeShipping
        res.status(200).json({"status":httpsStatus.SUCCESS,"data":{
         "all":all,
