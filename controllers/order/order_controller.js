@@ -172,7 +172,7 @@ const deleteOrder = async(req,res)=>{
     try {
      var token =  req.headers.token;
      const deliviry = await Deliviry.findOne({token:token});
-     const orders = await Order.find({orderStatusId:"finished",orderDeliviryId:deliviry.id}); 
+     const orders = await Order.find({orderStatusId:"finish",orderDeliviryId:deliviry.id}); 
      var orderRet = [];
      var shipping = 0;
      var myFreeShipping = 0;
