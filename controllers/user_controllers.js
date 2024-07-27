@@ -234,7 +234,27 @@ const deleteUserAdmin = async(req,res)=>{
     const userId = req.body.userId;
     const userSer = await User.findById(userId);
   if (userSer) {
-  const user = await User.findByIdAndDelete(userId);
+    const orders = await Order.find({orderUserId:userId});
+      for (let index = 0; index < orders.length; index++) {
+       if (orders[index].orderStatusId == "order by user" ||orders[index].orderStatusId == "not agree"  ) {
+        await Order.findByIdAndDelete(orders[index].id);
+       }
+      }     
+     
+            await User.findByIdAndDelete(userId);      
+             const courier = new CourierClient(
+                 { authorizationToken: "pk_prod_5T2N91YKAJ4FKGH0YAM3X4NKRB0V"});
+               const { requestId } =  courier.send({
+                 message: {
+                   content: {
+                     title: "delete account",
+                     body: `we have delete your account`
+                   },
+                   to: {
+                     email: `${userSer.email}`
+                   }
+                 }
+               });
   res.status(200).json({"status":httpsStatus.SUCCESS});
   
   } else {
@@ -303,8 +323,6 @@ if (valid.isEmpty()) {
   } catch (error) {
      res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
   }
-
-}
  module.exports = {
   registerFunc,loginFunc,sendResetCodeFunc,resetPasswordFunc,confirmAccountFunc,getUserInfo,getAllUsersVerifyAdmin,getAllUsersNotVerifyAdmin,deleteUserAdmin,privacy,deleteFunc
  }
