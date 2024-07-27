@@ -330,6 +330,30 @@ const finshOrderAdmin = async(req,res)=>{
       orderStatusId:"finish"
     }
   });
+  const vendorSer = await Vendor.findById(order.orderVendorId);
+ var salesV =  vendorSer.sales + order.orderPrice;
+ var vendorTax =  vendorSer.salesTax + (vendorSer.sales * (14/100));
+ var vendorFree = salesV - vendorTax;
+  const vendor = await Vendor.findByIdAndUpdate(order.orderVendorId,{
+    $set:{
+      sales:salesV,
+      salesTax:vendorTax,
+      myFreeSales:vendorFree
+    }
+  });
+  const delivirySer = await Deliviry.findById(order.orderDeliviryId);
+  var shippingD = delivirySer.shipping + order.orderShiping;
+  var DeliviryTax = delivirySer.shippingTax + (order.orderShiping * (5/100));
+  var deliviryFree = shippingD - DeliviryTax;
+  const deliviry = await Deliviry.findByIdAndUpdate(order.orderDeliviryId,{
+    $set:{
+      shipping:shippingD,
+      shippingTax:DeliviryTax,
+      myFreeShipping:deliviryFree
+    }
+  });
+  await deliviry.save();
+  await vendor.save();
   await newOrder.save();
   res.status(200).json({"status":httpsStatus.SUCCESS,"data":newOrder}); 
  } else {
