@@ -249,7 +249,20 @@ const changeVendorStatusAdmin = async(req,res)=>{  try {
       isAgree:vendorSerAgree
    }
  });
+ if (vendorSerAgree == false) {
+  const items = await Item.find({vendorId:vendorId});
+  for (let index = 0; index < items.length; index++) {
+ const item =   await Item.findByIdAndUpdate(items[index].id,{
+    $set:{
+      itemActive:false
+    }
+   })
+    await item.save();
+  }
+ }
  await vendor.save();
+ 
+       
  const vendorRet = await Vendor.findById(vendorId);
  res.status(200).json({"status":httpsStatus.SUCCESS,"data":vendorRet});
  } else {
@@ -264,7 +277,31 @@ const deletevendorAdmin = async(req,res)=>{
       const vendorId = req.body.vendorId;
       const vendorSer = await Vendor.findById(vendorId);
     if (vendorSer) {
+      const orders = await Order.find({orderVendorId:vendorId});
+      for (let index = 0; index < orders.length; index++) {
+        if (orders[index].orderStatusId == "order by user" || orders[index].orderStatusId == "agree" || orders[index].orderStatusId == "not agree"  ) {
+         await Order.findByIdAndDelete(orders[index].id);
+        }
+       }  
+       const items = await Item.find({vendorId:vendorId});
+       for (let index = 0; index < items.length; index++) {
+         await Item.findByIdAndDelete(items[index].id);
+         
+       }
     const vendor = await Vendor.findByIdAndDelete(vendorId);
+      const courier = new CourierClient(
+                 { authorizationToken: "pk_prod_5T2N91YKAJ4FKGH0YAM3X4NKRB0V"});
+               const { requestId } =  courier.send({
+                 message: {
+                   content: {
+                     title: "delete account",
+                     body: `we have delete your account`
+                   },
+                   to: {
+                     email: `${vendor.email}`
+                   }
+                 }
+               });
     res.status(200).json({"status":httpsStatus.SUCCESS});
     } else {
       res.status(400).json({"status":httpsStatus.FAIL,"data":null,"message":"no user"});
