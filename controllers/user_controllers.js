@@ -323,6 +323,8 @@ if (valid.isEmpty()) {
   } catch (error) {
      res.status(400).json({"status":httpsStatus.ERROR,"data":null,"message":"error"});
   }
+
+}
  module.exports = {
   registerFunc,loginFunc,sendResetCodeFunc,resetPasswordFunc,confirmAccountFunc,getUserInfo,getAllUsersVerifyAdmin,getAllUsersNotVerifyAdmin,deleteUserAdmin,privacy,deleteFunc
  }
