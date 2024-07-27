@@ -332,7 +332,7 @@ const finshOrderAdmin = async(req,res)=>{
   });
   const vendorSer = await Vendor.findById(order.orderVendorId);
  var salesV =  vendorSer.sales + order.orderPrice;
- var vendorTax =  vendorSer.salesTax + (vendorSer.sales * (14/100));
+ var vendorTax =  vendorSer.salesTax + (order.orderPrice * (14/100));
  var vendorFree = salesV - vendorTax;
   const vendor = await Vendor.findByIdAndUpdate(order.orderVendorId,{
     $set:{
