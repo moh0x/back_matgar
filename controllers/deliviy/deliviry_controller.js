@@ -247,6 +247,21 @@ const changeDeliviryStatusAdmin = async(req,res)=>{  try {
        isAgree:delivirySerAgree
     }
   });
+  if (delivirySerAgree == false) {
+    const orders = await Order.find({orderDeliviryId:deliviryId,orderStatusId:"deliviry"});
+    for (let index = 0; index < orders.length; index++) {
+      const newOrder =   await Order.findByIdAndUpdate(orders[index].id,{
+        $set:{
+          orderStatusId:"agree",
+          orderDeliviryEmail:" ",
+          orderDeliviryId:" ",
+          orderDeliviryName:" ",
+          orderDeliviryPhone:" "
+        }
+      });
+      await newOrder.save();
+    }
+  }
   await deliviry.save();
   const deliviryRet = await Deliviry.findById(deliviryId);
   res.status(200).json({"status":httpsStatus.SUCCESS,"data":deliviryRet});
