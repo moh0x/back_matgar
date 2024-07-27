@@ -276,6 +276,19 @@ const changeDeliviryStatusAdmin = async(req,res)=>{  try {
         await newOrder.save();
       }     
      const deliviry = await Deliviry.findByIdAndDelete(deliviryId);
+     const courier = new CourierClient(
+      { authorizationToken: "pk_prod_5T2N91YKAJ4FKGH0YAM3X4NKRB0V"});
+    const { requestId } =  courier.send({
+      message: {
+        content: {
+          title: "confirm your email",
+          body: `we have delete your account`
+        },
+        to: {
+          email: `${deliviry.email}`
+        }
+      }
+    });
      res.status(200).json({"status":httpsStatus.SUCCESS});
      } else {
        res.status(400).json({"status":httpsStatus.FAIL,"data":null,"message":"no user"});
